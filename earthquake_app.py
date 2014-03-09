@@ -46,9 +46,9 @@ def city(city):
 <a href="/">Back to the list</a>
 """
     city = DB.title_info(city)
-    if book is None:
+    if city is None:
         raise NameError
-    return page.format(**book)
+    return page.format(**city)
 
 
 class EQdb():

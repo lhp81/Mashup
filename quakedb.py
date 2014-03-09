@@ -48,7 +48,7 @@ def books():
     body.append('</ul>')
     return '\n'.join(body)
 
-def earthquakes():
+def all_earthquakes():
     all_quakes = data.locations()
     body = ['<h1>Earthquaes of Magnitude 7.0+</h1>']
     item_template = '<li><a href="/quake/{id}'><
