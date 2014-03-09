@@ -14,7 +14,7 @@ def earthquake():
     url = 'http://www.seismi.org/api/eqs/2013?min_magnitude=7'
     resp = requests.get(url)
     data = json.loads(resp.text)
-    city_list = ['Vancouver, BC', 'Seattle', 'Portland, OR', 'San Francisco, CA', 'Los Angeles, CA']
+    city_list = ['Juneau, AK', 'Vancouver, BC', 'Seattle', 'Portland, OR', 'San Francisco, CA', 'Los Angeles, CA']
     city_dict = {}
     for city in city_list:
         lat_c = get_city_loc(city)[0]
@@ -25,6 +25,7 @@ def earthquake():
         # print(city + ":")
         # for i in range(2):
             stri = str(i + 1)
+            timedate = data['earthquakes'][i]['timedate']
             lat_e = float(data['earthquakes'][i]['lat'])
             lng_e = float(data['earthquakes'][i]['lon'])
             mag = float(data['earthquakes'][i]['magnitude'])
@@ -41,7 +42,7 @@ def earthquake():
             depth_d = sqrt(depth**2 + epi_d**2)
             intensity = 10000 * mag / depth_d
             intensity_list.append(intensity)
-            eq_dict[stri] = [str(epi_d), str(depth_d), str(mag), str(intensity)]
+            eq_dict[stri] = [timedate, str(epi_d), str(depth_d), str(mag), str(intensity)]
         intensity_avg = sum(intensity_list) / len(intensity_list)
         city_dict[city] = (str(intensity_avg), eq_dict)
     pprint(city_dict)
