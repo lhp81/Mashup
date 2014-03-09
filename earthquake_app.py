@@ -38,10 +38,10 @@ def city(city):
     page = """
 <h1>{city}</h1>
 <table>
-    <tr><th>Distance from {city}:</th><td>{epi_d}</td></tr>
-    <tr><th>Depth Distance from {city}:</th><td>{depth_d}</td></tr>
-    <tr><th>Magnitude:</th><td>{mag}</td></tr>
-    <tr><th>Intensity:</th><td>{intensity}</td></tr>
+    <tr><th>Distance from {city}:</th><td>{city_dict[{city}][1]['1'][1]}</td></tr>
+    <tr><th>Depth Distance from {city}:</th><td>{city_dict[{city}][1]['1'][2]}</td></tr>
+    <tr><th>Magnitude:</th><td>{city_dict[{city}][1]['1'][3]}</td></tr>
+    <tr><th>Intensity:</th><td>{city_dict[{city}][1]['1'][4]}</td></tr>
 </table>
 <a href="/">Back to the list</a>
 """
@@ -53,8 +53,10 @@ def city(city):
 
 class EQdb():
     def cities(self):
-        cities = [dict(id=id, title=database[id]['city']) for id in
+        cities = [dict(id=id, title=database.keys() for id in
                   database.keys]
+
+    # this has to be refactored as 
 
     def average_intensity(self):
         intensity = [dict(id=id, title=database[id]['avg_int']) for id in
