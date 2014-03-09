@@ -45,7 +45,8 @@ def earthquake():
             eq_dict[stri] = [timedate, str(epi_d), str(depth_d), str(mag), str(intensity)]
         intensity_avg = sum(intensity_list) / len(intensity_list)
         city_dict[city] = (str(intensity_avg), eq_dict)
-    pprint(city_dict)
+    return city_dict
+    # pprint(city_dict)
             # print("Earthquake: " + stri + "\n" +
             #       "Distance: " + str(epi_d) + "\n" +
             #       "Depth distance: " + str(depth_d) + "\n" +
