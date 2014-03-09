@@ -15,11 +15,16 @@ def earthquake():
     resp = requests.get(url)
     data = json.loads(resp.text)
     city_list = ['Vancouver, BC', 'Seattle', 'Portland, OR', 'San Francisco, CA', 'Los Angeles, CA']
+    city_dict = {}
     for city in city_list:
         lat_c = get_city_loc(city)[0]
         lng_c = get_city_loc(city)[1]
-        # for i in range(len(data['earthquakes'])):
-        for i in range(2):
+        intensity_list = []
+        eq_dict = {}
+        for i in range(len(data['earthquakes'])):
+        # print(city + ":")
+        # for i in range(2):
+            stri = str(i + 1)
             lat_e = float(data['earthquakes'][i]['lat'])
             lng_e = float(data['earthquakes'][i]['lon'])
             mag = float(data['earthquakes'][i]['magnitude'])
@@ -35,10 +40,20 @@ def earthquake():
             epi_d = R * c
             depth_d = sqrt(depth**2 + epi_d**2)
             intensity = 10000 * mag / depth_d
-            print("Distance from " + city + ": " + str(epi_d) + "\n" +
-                  "Depth distance from " + city + ": " + str(depth_d) + "\n" +
-                  "Magnitude: " + str(mag) + "\n" +
-                  "Intensity: " + str(intensity) + "\n")
+            intensity_list.append(intensity)
+            eq_dict[stri] = [str(epi_d), str(depth_d), str(mag), str(intensity)]
+        intensity_avg = sum(intensity_list) / len(intensity_list)
+        city_dict[city] = (str(intensity_avg), eq_dict)
+    pprint(city_dict)
+            # print("Earthquake: " + stri + "\n" +
+            #       "Distance: " + str(epi_d) + "\n" +
+            #       "Depth distance: " + str(depth_d) + "\n" +
+            #       "Magnitude: " + str(mag) + "\n" +
+            #       "Intensity: " + str(intensity) + "\n")
+            # print("Distance from " + city + ": " + str(epi_d) + "\n" +
+            #       "Depth distance from " + city + ": " + str(depth_d) + "\n" +
+            #       "Magnitude: " + str(mag) + "\n" +
+            #       "Intensity: " + str(intensity) + "\n")
 
 
 def get_city_loc(city):
@@ -51,4 +66,9 @@ def get_city_loc(city):
     lng = data['results'][0]['geometry']['location']['lng']
     return (lat, lng)
 
-earthquake()
+if __name__ == '__main__':
+    earthquake()
+    # if len(sys.argv) > 1 and sys.argv[1] == 'test':
+    #     html, encoding = read_search_results()
+    # else:
+
