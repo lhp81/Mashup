@@ -8,6 +8,7 @@ from math import cos as cos
 from math import atan2 as atan2
 from math import radians as rad
 from math import sqrt as sqrt
+import re
 
 
 def resolve_path(path):
