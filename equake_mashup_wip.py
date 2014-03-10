@@ -74,8 +74,8 @@ eq_dict = earthquake()
 
 
 def cities():
-    all_cities = [key for key in temp_dict]
-    mean_intensity = [temp_dict[city][0] for city in all_cities]
+    all_cities = [key for key in eq_dict]
+    mean_intensity = [eq_dict[city][0] for city in all_cities]
     body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
     item_template = ('<li><strong><a href="/cities/{0}">{0}</a></strong>'
                      '(Mean Intensity: {1})</li>')
@@ -98,10 +98,10 @@ def city(city):
     <tr><th>Magnitude:</th><td>{magnitude}</td></tr>
     <tr><th>Intensity:</th><td>{mintensity}</td></tr>
     """)
-    all_cities = [key for key in temp_dict]
-    mean_intensity = [temp_dict[city][0] for key in all_cities]
+    all_cities = [key for key in eq_dict]
+    mean_intensity = [eq_dict[city][0] for key in all_cities]
     for city in all_cities:
-        for i in range(1, (len(temp_dict[city][1])+1)):
+        for i in range(1, (len(eq_dict[city][1])+1)):
             mintensity = mean_intensity[all_cities.index(city)]
             timedate = [eq_dict[city][1][str(i)][0]]
             city_distance = [eq_dict[city][1][str(i)][1]]
