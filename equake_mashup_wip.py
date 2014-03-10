@@ -85,9 +85,11 @@ def cities():
     mean_intensity = [earthquake()['city'][0] for city in all_cities]
     body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
     item_template = ('<li><strong><a href="/cities/{city}">{city}</a></strong>'
-                     '(Mean Intensity: {mean_intensity})</li>')
+                     '(Mean Intensity: {mi})</li>')
     for city in all_cities:
-        body.append(item_template.format(**city,**mean_intensity)))
+        body.append(item_template.format(**city))
+    for mi in mean_intensity:
+        body.append(item_template.format(**mi))
     body.append('</ul>')
     return '\n'.join(body)
 
@@ -134,4 +136,6 @@ if __name__ == '__main__':
     # if len(sys.argv) > 1 and sys.argv[1] == 'test':
     #     html, encoding = read_search_results()
     # else:
-
+    from wsgiref.simple_server import make_server
+    srv = make_server('localhost', 8080, application)
+    srv.serve_forever()
