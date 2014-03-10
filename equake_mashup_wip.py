@@ -1,22 +1,34 @@
 #! /usr/bin/env python
 
-import requests
 import json
 from pprint import pprint
+import re
+import requests
 from math import sin as sin
 from math import cos as cos
 from math import atan2 as atan2
 from math import radians as rad
 from math import sqrt as sqrt
-import re
+
+
+def resolve_path(path):
+    urls = [(r'^$', cities),
+            (r'^^/cities/(id[\d]+)$', city)]
+    matchpath = path.lstrip('/')
+    for regexp, func in urls:
+        match = re.match(regexp, matchpath)
+        if match is None:
+            continue
+        args = match.groups([])
+        return func, args
+    raise NameError
 
 
 def earthquake():
     url = 'http://www.seismi.org/api/eqs/2013?min_magnitude=7'
     resp = requests.get(url)
     data = json.loads(resp.text)
-    city_list = ['Juneau, AK', 'Vancouver, BC', 'Seattle', 'Portland, '
-                 'OR', 'San Francisco, CA', 'Los Angeles, CA']
+    city_list = ['Juneau, AK', 'Vancouver, BC', 'Seattle', 'Portland, OR', 'San Francisco, CA', 'Los Angeles, CA']
     city_dict = {}
     for city in city_list:
         lat_c = get_city_loc(city)[0]
@@ -46,16 +58,6 @@ def earthquake():
         intensity_avg = sum(intensity_list) / len(intensity_list)
         city_dict[city] = (str(intensity_avg), eq_dict)
     return city_dict
-    # pprint(city_dict)
-            # print("Earthquake: " + stri + "\n" +
-            #       "Distance: " + str(epi_d) + "\n" +
-            #       "Depth distance: " + str(depth_d) + "\n" +
-            #       "Magnitude: " + str(mag) + "\n" +
-            #       "Intensity: " + str(intensity) + "\n")
-            # print("Distance from " + city + ": " + str(epi_d) + "\n" +
-            #       "Depth distance from " + city + ": " + str(depth_d) + "\n" +
-            #       "Magnitude: " + str(mag) + "\n" +
-            #       "Intensity: " + str(intensity) + "\n")
 
 
 def get_city_loc(city):
@@ -68,51 +70,52 @@ def get_city_loc(city):
     lng = data['results'][0]['geometry']['location']['lng']
     return (lat, lng)
 
+temp_dict = earthquake()
+city_dict = [dict(id=city, title=database[id]['title']) for id in
+                  temp_dict()]
 
-def resolve_path(path):
-    urls = [(r'^$', cities),
-            # (r'^^/cities/city$', city)
-            ]
-    matchpath = path.lstrip('/')
-    for regexp, func in urls:
-        match = re.match(regexp, matchpath)
-        if match is None:
-            continue
-        args = match.groups([])
-        return func, args
-    raise NameError
-
-city_list = ['Portland, OR', 'Seattle', 'Vancouver, BC', 'Los Angeles, CA',
-             'San Francisco, CA']
 
 def cities():
-    # city = [cit for cit in city_list]
-    # # mean_intensity = city_list['city'][0]
-    # body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
-    # item_template = ('<li><strong><a href="/cities/{city}">{city}</a></strong>')
-    #                  # '(Mean Intensity: {mi})</li>')
-    # for city in all_cities:
-    #     body.append(item_template.format(**city))
-    # # for mi in mean_intensity:
-    # #     body.append(item_template.format(**mi))
-    # body.append('</ul>')
-    # return '\n'.join(body)
-    return '<h1>West Coast City Earthquake Data</h1>'
+    all_cities = [key for key in temp_dict]
+    mean_intensity = [temp_dict[city][0] for city in all_cities]
+    body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
+    item_template = ('<li><strong><a href="/cities/{0}">{0}</a></strong>'
+                     '(Mean Intensity: {1})</li>')
+    for city in all_cities:
+        mintensity = mean_intensity[all_cities.index(city)]
+        body.append(item_template.format(city, mintensity))
+    # for mi in mean_intensity:
+    #     body.append(item_template.format(mi))
+    body.append('</ul>')
+    return '\n'.join(body)
+    # return mean_intensity
 
 
 def city(city):
-    page = """
-<h1>{city}</h1>
-<table>
+    body = '<h1>{City}</h1>, <table>'
+    item_template = """
+    <tr><th><strong>Time/Date:</th><td>{timedate}</strong></td></tr>
     <tr><th>Distance from {city}:</th><td>{city_distance}</td></tr>
-    <tr><th>Depth Distance from {city}:</th><td>{depth_distance}</td></tr>
+    <tr><th>Depth Distance from {city}:</th><td>{depth_dist}</td></tr>
     <tr><th>Magnitude:</th><td>{magnitude}</td></tr>
-    <tr><th>Intensity:</th><td>{intensity}</td></tr>
-</table>
-<a href="/">Back to the list</a>
-"""
-    city = [earthquake().keys()[i] for i in range(0, len(earthquake)-1)]
-    # depth_distance = 
+    <tr><th>Intensity:</th><td>{mintensity}</td></tr>
+    """
+    all_cities = [key for key in temp_dict]
+    mean_intensity = [temp_dict[city][0] for city in all_cities]
+    for city in cities:
+        mintensity = mean_intensity[all_cities.index(city)]
+        timedate = [temp_dict[city][1][0]
+        city_distance = [temp_dict[city][1][1]
+        depth_dist = [temp_dict[city][1][2]
+        magnitude = [temp_dict[city][1][3]
+        body.append(item_template.format(city, timedate, city_distance,
+                    depth_dist, magnitude, mintensity))
+
+
+    number_of_events = [len(temp_dict.keys()[city]) for city in all_cities]
+    body.append('<a href="/">Back to the list</a>')
+    return '\n'.join(body)
+
     if city is None:
         raise NameError
     return page.format(**city)
@@ -120,6 +123,7 @@ def city(city):
 
 def application(environ, start_response):
     headers = [("Content-type", "text/html")]
+    # import pdb; pdb.set_trace()
     try:
         path = environ.get('PATH_INFO', None)
         if path is None:
@@ -139,11 +143,12 @@ def application(environ, start_response):
         return [body]
 
 if __name__ == '__main__':
-    earthquake()
+    from wsgiref.simple_server import make_server
+    srv = make_server('localhost', 8000, application)
+    srv.serve_forever()
+    # earthquake()
     # if len(sys.argv) > 1 and sys.argv[1] == 'test':
     #     html, encoding = read_search_results()
     # else:
-    from wsgiref.simple_server import make_server
-    srv = make_server('localhost', 8080, application)
-    srv.serve_forever()
-    application()
+    # pprint(cities())
+    # pprint(earthquake())
