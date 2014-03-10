@@ -90,8 +90,8 @@ def cities():
 
 
 def city(city):
-    body = '<h1>City</h1>'
-    # body.append(body.format(city))
+    body = '<h1>{city}</h1>'
+    body.format(city)
     item_template = ("""
     <h2>{timedate}</h2>
     <table>
