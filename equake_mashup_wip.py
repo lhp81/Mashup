@@ -101,12 +101,13 @@ def city(city):
     <tr><th>Magnitude:</th><td>{magnitude}</td></tr>
     <tr><th>Intensity:</th><td>{mintensity}</td></tr>
     """)
-    mintensity = eq_dict[city][0]
+    
     for i in range(1, (len(eq_dict[city][1])+1)):
         timedate = eq_dict[city][1][str(i)][0]
         city_distance = eq_dict[city][1][str(i)][1]
         depth_dist = eq_dict[city][1][str(i)][2]
         magnitude = eq_dict[city][1][str(i)][3]
+        mintensity = eq_dict[city][0][str(i)][4]
         body.append(item_template.format(timedate, city, city_distance,
                     city, depth_dist, magnitude, mintensity))
     body.append('</table><a href="/">Back to the list</a>')
@@ -114,7 +115,7 @@ def city(city):
 
     if city is None:
         raise NameError
-    return page.format(**city)
+    # return page.format(**city)
 
 def application(environ, start_response):
     headers = [("Content-type", "text/html")]
