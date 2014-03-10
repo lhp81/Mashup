@@ -11,24 +11,12 @@ from math import sqrt as sqrt
 import re
 
 
-def resolve_path(path):
-    urls = [(r'^$', cities),
-            (r'^^/cities/(id[\d]+)$', city)]
-    matchpath = path.lstrip('/')
-    for regexp, func in urls:
-        match = re.match(regexp, matchpath)
-        if match is None:
-            continue
-        args = match.groups([])
-        return func, args
-    raise NameError
-
-
 def earthquake():
     url = 'http://www.seismi.org/api/eqs/2013?min_magnitude=7'
     resp = requests.get(url)
     data = json.loads(resp.text)
-    city_list = ['Juneau, AK', 'Vancouver, BC', 'Seattle', 'Portland, OR', 'San Francisco, CA', 'Los Angeles, CA']
+    city_list = ['Juneau, AK', 'Vancouver, BC', 'Seattle', 'Portland, '
+                 'OR', 'San Francisco, CA', 'Los Angeles, CA']
     city_dict = {}
     for city in city_list:
         lat_c = get_city_loc(city)[0]
@@ -81,32 +69,50 @@ def get_city_loc(city):
     return (lat, lng)
 
 
+def resolve_path(path):
+    urls = [(r'^$', cities),
+            # (r'^^/cities/city$', city)
+            ]
+    matchpath = path.lstrip('/')
+    for regexp, func in urls:
+        match = re.match(regexp, matchpath)
+        if match is None:
+            continue
+        args = match.groups([])
+        return func, args
+    raise NameError
+
+city_list = ['Portland, OR', 'Seattle', 'Vancouver, BC', 'Los Angeles, CA',
+             'San Francisco, CA']
+
 def cities():
-    all_cities = [key for key in earthquake()]
-    mean_intensity = [earthquake()['city'][0] for city in all_cities]
-    body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
-    item_template = ('<li><strong><a href="/cities/{city}">{city}</a></strong>'
-                     '(Mean Intensity: {mi})</li>')
-    for city in all_cities:
-        body.append(item_template.format(**city))
-    for mi in mean_intensity:
-        body.append(item_template.format(**mi))
-    body.append('</ul>')
-    return '\n'.join(body)
+    # city = [cit for cit in city_list]
+    # # mean_intensity = city_list['city'][0]
+    # body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
+    # item_template = ('<li><strong><a href="/cities/{city}">{city}</a></strong>')
+    #                  # '(Mean Intensity: {mi})</li>')
+    # for city in all_cities:
+    #     body.append(item_template.format(**city))
+    # # for mi in mean_intensity:
+    # #     body.append(item_template.format(**mi))
+    # body.append('</ul>')
+    # return '\n'.join(body)
+    return '<h1>West Coast City Earthquake Data</h1>'
 
 
 def city(city):
     page = """
 <h1>{city}</h1>
 <table>
-    <tr><th>Distance from {city}:</th><td>{city_dict[{city}][1]['1'][1]}</td></tr>
-    <tr><th>Depth Distance from {city}:</th><td>{city_dict[{city}][1]['1'][2]}</td></tr>
-    <tr><th>Magnitude:</th><td>{city_dict[{city}][1]['1'][3]}</td></tr>
-    <tr><th>Intensity:</th><td>{city_dict[{city}][1]['1'][4]}</td></tr>
+    <tr><th>Distance from {city}:</th><td>{city_distance}</td></tr>
+    <tr><th>Depth Distance from {city}:</th><td>{depth_distance}</td></tr>
+    <tr><th>Magnitude:</th><td>{magnitude}</td></tr>
+    <tr><th>Intensity:</th><td>{intensity}</td></tr>
 </table>
 <a href="/">Back to the list</a>
 """
-    city = cities.all_cities(city)
+    city = [earthquake().keys()[i] for i in range(0, len(earthquake)-1)]
+    # depth_distance = 
     if city is None:
         raise NameError
     return page.format(**city)
@@ -140,3 +146,4 @@ if __name__ == '__main__':
     from wsgiref.simple_server import make_server
     srv = make_server('localhost', 8080, application)
     srv.serve_forever()
+    application()
