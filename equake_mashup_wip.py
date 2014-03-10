@@ -87,8 +87,7 @@ def cities():
 
 
 def city(city):
-    body = ['<h1>{0}</h1>']
-    body.append(body.format(city))
+    body = ['<h1>Title</h1>']
     item_template = ('<table>'
                     '<tr><th>Event time:</th><td>{0} km</td></tr>'
                     '<tr><th>Epicenter distance from {1}:</th><td>{2} km</td></tr>'
