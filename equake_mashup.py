@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 import json
-# from pprint import pprint
+from pprint import pprint
 import re
 import requests
 from math import sin as sin
@@ -72,19 +72,20 @@ def get_city_loc(city):
 
 
 def cities():
-    # all_cities = [key for key in earthquake()]
-    all_cities = ['this', 'that', 'these', 'those']
-    # mean_intensity = [earthquake()['city'][0] for city in all_cities]
+    temp_dict = earthquake()
+    all_cities = [key for key in temp_dict]
+    mean_intensity = [temp_dict[city][0] for city in all_cities]
     body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
     item_template = ('<li><strong><a href="/cities/{0}">{0}</a></strong>'
-                     '(Mean Intensity: {0})</li>')
+                     '(Mean Intensity: {1})</li>')
     for city in all_cities:
-        body.append(item_template.format(city))
+        mintensity = mean_intensity[all_cities.index(city)]
+        body.append(item_template.format(city, mintensity))
     # for mi in mean_intensity:
     #     body.append(item_template.format(mi))
     body.append('</ul>')
     return '\n'.join(body)
-    # return '<h1>West Coast City Earthquake Data</h1>'
+    # return mean_intensity
 
 
 def city(city):
@@ -133,4 +134,5 @@ if __name__ == '__main__':
     # if len(sys.argv) > 1 and sys.argv[1] == 'test':
     #     html, encoding = read_search_results()
     # else:
-    # cities()
+    # pprint(cities())
+    # pprint(earthquake())
