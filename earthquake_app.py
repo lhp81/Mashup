@@ -3,7 +3,7 @@ import re
 
 def resolve_path(path):
     urls = [(r'^$', cities),
-            (r'^^/cities/(id[\d]+)$', city)]
+            (r'^cities/(city)$', city)]
     matchpath = path.lstrip('/')
     for regexp, func in urls:
         match = re.match(regexp, matchpath)
