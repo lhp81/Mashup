@@ -107,8 +107,8 @@ def city(city):
     body.append('</table><a href="/">Back to the list</a>')
     return '\n'.join(body)
 
-    if city is None:
-        raise NameError
+    # if city is None:
+    #     raise NameError
     # return page.format(**city)
 
 # def city(city):
