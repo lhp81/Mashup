@@ -1,12 +1,17 @@
-def cities():
-    all_cities = DB.cities()
-    body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
-    item_template = ('<li><strong><a href="/city/{id}">{city}</a></strong>'
-                     '(Average Intensity: {avg_int})</li>')
-    for city in all_cities:
-        body.append(item_template.format(**city))
-    body.append('</ul>')
-    return '\n'.join(body)
+import re
+
+
+def resolve_path(path):
+    urls = [(r'^$', cities),
+            (r'^^/cities/(id[\d]+)$', city)]
+    matchpath = path.lstrip('/')
+    for regexp, func in urls:
+        match = re.match(regexp, matchpath)
+        if match is None:
+            continue
+        args = match.groups([])
+        return func, args
+    raise NameError
 
 
 def application(environ, start_response):
@@ -29,10 +34,18 @@ def application(environ, start_response):
         start_response(status, headers)
         return [body]
 
-if __name__ == '__main__':
-    from wsgiref.simple_server import make_server
-    srv = make_server('localhost', 8080, application)
-    srv.serve_forever()
+
+def cities():
+    all_cities = [key for key in earthquake()]
+    all_means = earthquake()['city'][0] for city in all_cities
+    body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
+    item_template = ('<li><strong><a href="/cities/{city}">{city}</a></strong>'
+                     '(Mean Intensity: {mean_intensity})</li>')
+    for city in all_cities:
+        body.append(item_template.format(**city,**mean_intensity)))
+    body.append('</ul>')
+    return '\n'.join(body)
+
 
 def city(city):
     page = """
@@ -50,14 +63,7 @@ def city(city):
         raise NameError
     return page.format(**city)
 
-
-class EQdb():
-    def cities(self):
-        cities = [dict(id=id, title=database.keys() for id in
-                  database.keys]
-
-    # this has to be refactored as 
-
-    def average_intensity(self):
-        intensity = [dict(id=id, title=database[id]['avg_int']) for id in
-                     database.keys]
+if __name__ == '__main__':
+    from wsgiref.simple_server import make_server
+    srv = make_server('localhost', 8080, application)
+    srv.serve_forever()
