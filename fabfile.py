@@ -32,7 +32,7 @@ def provision_instance(wait_for_running=True, timeout=60, interval=2):
     timeout_val = int(timeout)
     conn = get_ec2_connection()
     instance_type = 't1.micro'
-    key_name = 'pk-aws'
+    key_name = 'mykeypair'
     security_group = 'ssh-access'
     image_id = 'ami-c8bed2f8'
 
@@ -150,7 +150,6 @@ def sync_it():
 
 def _install_dep():
     sudo('apt-get -y install nginx')
-    sudo('pip install requests')
 
 
 def install_dep():
