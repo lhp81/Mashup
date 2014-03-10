@@ -13,7 +13,7 @@ from math import sqrt as sqrt
 
 def resolve_path(path):
     urls = [(r'^$', cities),
-            (r'^^/cities/(id[\d]+)$', city)]
+            (r'^cities/(.+)$', city)]
     matchpath = path.lstrip('/')
     for regexp, func in urls:
         match = re.match(regexp, matchpath)
@@ -80,17 +80,17 @@ def cities():
     item_template = ('<li><strong><a href="/cities/{0}">{0}</a></strong>'
                      '(Mean Intensity: {1})</li>')
     for city in all_cities:
+        # city_as_list = city.split()
+        # cwos = ''.join(city_as_list)
+
         mintensity = mean_intensity[all_cities.index(city)]
         body.append(item_template.format(city, mintensity))
-    # for mi in mean_intensity:
-    #     body.append(item_template.format(mi))
     body.append('</ul>')
     return '\n'.join(body)
-    # return mean_intensity
 
 
 def city(city):
-    body = '<h1>{City}</h1>, <table>'
+    body = '<h1>{city}</h1>, <table>'
     item_template = ("""
     <tr><th><strong>Time/Date:</th><td>{timedate}</strong></td></tr>
     <tr><th>Distance from {city}:</th><td>{city_distance}</td></tr>
@@ -98,24 +98,20 @@ def city(city):
     <tr><th>Magnitude:</th><td>{magnitude}</td></tr>
     <tr><th>Intensity:</th><td>{mintensity}</td></tr>
     """)
-    all_cities = [key for key in eq_dict]
-    mean_intensity = [eq_dict[city][0] for key in all_cities]
-    for city in all_cities:
-        for i in range(1, (len(eq_dict[city][1])+1)):
-            mintensity = mean_intensity[all_cities.index(city)]
-            timedate = [eq_dict[city][1][str(i)][0]]
-            city_distance = [eq_dict[city][1][str(i)][1]]
-            depth_dist = [eq_dict[city][1][str(i)][2]]
-            magnitude = [eq_dict[city][1][str(i)][3]]
-            body.append(item_template.format(city, timedate, city_distance,
-                        depth_dist, magnitude, mintensity))
-    body.append('<a href="/">Back to the list</a>')
+    for i in range(1, (len(eq_dict[city][1])+1)):
+        mintensity = eq_dict[city][0]
+        timedate = eq_dict[city][1][str(i)][0]
+        city_distance = eq_dict[city][1][str(i)][1]
+        depth_dist = eq_dict[city][1][str(i)][2]
+        magnitude = eq_dict[city][1][str(i)][3]
+        body.append(item_template.format(city, timedate, city, city_distance,
+                    city, depth_dist, magnitude, mintensity))
+    body.append('</table><a href="/">Back to the list</a>')
     return '\n'.join(body)
 
     if city is None:
         raise NameError
     return page.format(**city)
-
 
 def application(environ, start_response):
     headers = [("Content-type", "text/html")]
