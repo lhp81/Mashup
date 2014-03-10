@@ -94,7 +94,7 @@ def city(city):
                     '<tr><th>Depth Distance from {1}:</th><td>{3} km</td></tr>'
                     '<tr><th>Magnitude:</th><td>{4}</td></tr>'
                     '<tr><th>Intensity:</th><td>{5}</td></tr>'
-                    '</table>' )
+                    '</table><br />' )
 
     for key in eq_dict[city][1]:
         timedate = eq_dict[city][1][key][0]
