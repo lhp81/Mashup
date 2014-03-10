@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 
-import requests
 import json
 from pprint import pprint
 from math import sin as sin
@@ -57,16 +56,6 @@ def earthquake():
         intensity_avg = sum(intensity_list) / len(intensity_list)
         city_dict[city] = (str(intensity_avg), eq_dict)
     return city_dict
-    # pprint(city_dict)
-            # print("Earthquake: " + stri + "\n" +
-            #       "Distance: " + str(epi_d) + "\n" +
-            #       "Depth distance: " + str(depth_d) + "\n" +
-            #       "Magnitude: " + str(mag) + "\n" +
-            #       "Intensity: " + str(intensity) + "\n")
-            # print("Distance from " + city + ": " + str(epi_d) + "\n" +
-            #       "Depth distance from " + city + ": " + str(depth_d) + "\n" +
-            #       "Magnitude: " + str(mag) + "\n" +
-            #       "Intensity: " + str(intensity) + "\n")
 
 
 def get_city_loc(city):
