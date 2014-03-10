@@ -87,8 +87,8 @@ def cities():
 
 
 def city(city):
-    body = ['<h1>{city}</h1>', '<table>']
-    body.format(city)
+    body = ['<h1>City</h1>', '<table>']
+    # body.format(city)
     item_template = ("""
     <tr><th><strong>Time/Date:</th><td>{timedate}</strong></td></tr>
     <tr><th>Epicenter distance from {city}:</th><td>{city_distance} km</td></tr>
@@ -102,8 +102,8 @@ def city(city):
         depth_dist = eq_dict[city][1][key][2]
         magnitude = eq_dict[city][1][key][3]
         mintensity = eq_dict[city][0][key][4]
-        body.append(item_template.format(timedate, city, city_distance,
-                    city, depth_dist, magnitude, mintensity))
+        body.append(item_template.format(city, timedate, city_distance,
+                    depth_dist, magnitude, mintensity))
     body.append('</table><a href="/">Back to the list</a>')
     return '\n'.join(body)
 
