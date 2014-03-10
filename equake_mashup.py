@@ -13,7 +13,7 @@ from math import sqrt as sqrt
 
 def resolve_path(path):
     urls = [(r'^$', cities),
-            (r'^^/cities/city$', city)]
+            (r'^cities/(.+)$', city)]
     matchpath = path.lstrip('/')
     for regexp, func in urls:
         match = re.match(regexp, matchpath)
@@ -70,39 +70,41 @@ def get_city_loc(city):
     lng = data['results'][0]['geometry']['location']['lng']
     return (lat, lng)
 
+eq_dict = earthquake()
+
 
 def cities():
-    temp_dict = earthquake()
-    all_cities = [key for key in temp_dict]
-    mean_intensity = [temp_dict[city][0] for city in all_cities]
+    all_cities = [key for key in eq_dict]
+    mean_intensity = [eq_dict[city][0] for city in all_cities]
     body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
     item_template = ('<li><strong><a href="/cities/{0}">{0}</a></strong>'
                      '(Mean Intensity: {1})</li>')
     for city in all_cities:
+        # city_as_list = city.split()
+        # cwos = ''.join(city_as_list)
+
         mintensity = mean_intensity[all_cities.index(city)]
         body.append(item_template.format(city, mintensity))
-    # for mi in mean_intensity:
-    #     body.append(item_template.format(mi))
     body.append('</ul>')
     return '\n'.join(body)
-    # return mean_intensity
 
 
 def city(city):
-    page = """
-<h1>{city}</h1>
-<table>
-    <tr><th>Distance from {city}:</th><td>{city_dict[{city}][1]['1'][1]}</td></tr>
-    <tr><th>Depth Distance from {city}:</th><td>{city_dict[{city}][1]['1'][2]}</td></tr>
-    <tr><th>Magnitude:</th><td>{city_dict[{city}][1]['1'][3]}</td></tr>
-    <tr><th>Intensity:</th><td>{city_dict[{city}][1]['1'][4]}</td></tr>
-</table>
-<a href="/">Back to the list</a>
-"""
-    city = cities.all_cities(city)
-    if city is None:
-        raise NameError
-    return page.format(**city)
+#     page = """
+# <h1>{city}</h1>
+# <table>
+#     <tr><th>Distance from {city}:</th><td>{city_dict[{city}][1]['1'][1]}</td></tr>
+#     <tr><th>Depth Distance from {city}:</th><td>{city_dict[{city}][1]['1'][2]}</td></tr>
+#     <tr><th>Magnitude:</th><td>{city_dict[{city}][1]['1'][3]}</td></tr>
+#     <tr><th>Intensity:</th><td>{city_dict[{city}][1]['1'][4]}</td></tr>
+# </table>
+# <a href="/">Back to the list</a>
+# """
+#     city = temp_dict(city)
+#     if city is None:
+#         raise NameError
+#     return page.format(**city)
+    return '<h1>This is the city page for ' + city +'</h1>'
 
 
 def application(environ, start_response):
