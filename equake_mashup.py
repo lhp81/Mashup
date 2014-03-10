@@ -1,7 +1,9 @@
 #! /usr/bin/env python
 
 import json
-from pprint import pprint
+# from pprint import pprint
+import re
+import requests
 from math import sin as sin
 from math import cos as cos
 from math import atan2 as atan2
@@ -11,7 +13,7 @@ from math import sqrt as sqrt
 
 def resolve_path(path):
     urls = [(r'^$', cities),
-            (r'^^/cities/(id[\d]+)$', city)]
+            (r'^^/cities/city$', city)]
     matchpath = path.lstrip('/')
     for regexp, func in urls:
         match = re.match(regexp, matchpath)
@@ -70,15 +72,19 @@ def get_city_loc(city):
 
 
 def cities():
-    all_cities = [key for key in earthquake()]
-    all_means = earthquake()['city'][0] for city in all_cities
+    # all_cities = [key for key in earthquake()]
+    all_cities = ['this', 'that', 'these', 'those']
+    # mean_intensity = [earthquake()['city'][0] for city in all_cities]
     body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
-    item_template = ('<li><strong><a href="/cities/{city}">{city}</a></strong>'
-                     '(Mean Intensity: {mean_intensity})</li>')
+    item_template = ('<li><strong><a href="/cities/{0}">{0}</a></strong>'
+                     '(Mean Intensity: {0})</li>')
     for city in all_cities:
-        body.append(item_template.format(**city,**mean_intensity)))
+        body.append(item_template.format(city))
+    # for mi in mean_intensity:
+    #     body.append(item_template.format(mi))
     body.append('</ul>')
     return '\n'.join(body)
+    # return '<h1>West Coast City Earthquake Data</h1>'
 
 
 def city(city):
@@ -92,7 +98,7 @@ def city(city):
 </table>
 <a href="/">Back to the list</a>
 """
-    city = DB.title_info(city)
+    city = cities.all_cities(city)
     if city is None:
         raise NameError
     return page.format(**city)
@@ -100,6 +106,7 @@ def city(city):
 
 def application(environ, start_response):
     headers = [("Content-type", "text/html")]
+    # import pdb; pdb.set_trace()
     try:
         path = environ.get('PATH_INFO', None)
         if path is None:
@@ -119,8 +126,11 @@ def application(environ, start_response):
         return [body]
 
 if __name__ == '__main__':
-    earthquake()
+    from wsgiref.simple_server import make_server
+    srv = make_server('localhost', 8000, application)
+    srv.serve_forever()
+    # earthquake()
     # if len(sys.argv) > 1 and sys.argv[1] == 'test':
     #     html, encoding = read_search_results()
     # else:
-
+    # cities()
