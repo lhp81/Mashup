@@ -70,9 +70,9 @@ def get_city_loc(city):
     lng = data['results'][0]['geometry']['location']['lng']
     return (lat, lng)
 
-temp_dict = earthquake()
+eq_dict = earthquake()
 city_dict = [dict(id=city, title=database[id]['title']) for id in
-                  temp_dict()]
+                  temp_dict]
 
 
 def cities():
@@ -93,16 +93,16 @@ def cities():
 
 def city(city):
     body = '<h1>{City}</h1>, <table>'
-    item_template = """
+    item_template = ("""
     <tr><th><strong>Time/Date:</th><td>{timedate}</strong></td></tr>
     <tr><th>Distance from {city}:</th><td>{city_distance}</td></tr>
     <tr><th>Depth Distance from {city}:</th><td>{depth_dist}</td></tr>
     <tr><th>Magnitude:</th><td>{magnitude}</td></tr>
     <tr><th>Intensity:</th><td>{mintensity}</td></tr>
-    """
+    """)
     all_cities = [key for key in temp_dict]
     mean_intensity = [temp_dict[city][0] for city in all_cities]
-    for city in cities:
+    for city in all_cities:
         mintensity = mean_intensity[all_cities.index(city)]
         timedate = [temp_dict[city][1][0]
         city_distance = [temp_dict[city][1][1]
@@ -110,8 +110,6 @@ def city(city):
         magnitude = [temp_dict[city][1][3]
         body.append(item_template.format(city, timedate, city_distance,
                     depth_dist, magnitude, mintensity))
-
-
     number_of_events = [len(temp_dict.keys()[city]) for city in all_cities]
     body.append('<a href="/">Back to the list</a>')
     return '\n'.join(body)
