@@ -103,7 +103,7 @@ def city(city):
         magnitude = eq_dict[city][1][key][3]
         mag_intensity = eq_dict[city][1][key][4]
         body.append(item_template.format(timedate, city, city_distance,
-                    depth_dist, magnitude))
+                    depth_dist, magnitude, mag_intensity))
     body.append('<a href="/">Back to the list</a>')
     return '\n'.join(body)
 
