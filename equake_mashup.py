@@ -87,81 +87,30 @@ def cities():
 
 
 def city(city):
-    body = '<h1>{city}</h1>'
-    body.format(city)
-    item_template = ("""
-    <h2>{timedate}</h2>
-    <table>
-    # <tr><th><strong>Time/Date:</th><td>{0}</strong></td></tr>
-    <tr><th>Epicenter distance from {1}:</th><td>{2} km</td></tr>
-    <tr><th>Depth Distance from {1}:</th><td>{3} km</td></tr>
-    <tr><th>Magnitude:</th><td>{4}</td></tr>
-    <tr><th>Intensity:</th><td>{5}</td></tr>
-    """)
-    mintensity = eq_dict[city][0]
+    pre_body = '<h1>{0} Data:</h1>'
+    body = [pre_body.format(city)]
+    item_template = ('<table>'
+                    '<tr><th>Event time:</th><td>{0} km</td></tr>'
+                    '<tr><th>Epicenter distance from {1}:</th><td>{2} km</td></tr>'
+                    '<tr><th>Depth Distance from {1}:</th><td>{3} km</td></tr>'
+                    '<tr><th>Magnitude:</th><td>{4}</td></tr>'
+                    '<tr><th>Intensity:</th><td>{5}</td></tr>'
+                    '</table><br />')
+
     for key in eq_dict[city][1]:
         timedate = eq_dict[city][1][key][0]
         city_distance = eq_dict[city][1][key][1]
         depth_dist = eq_dict[city][1][key][2]
         magnitude = eq_dict[city][1][key][3]
+        intensity = eq_dict[city][1][key][4]
         body.append(item_template.format(timedate, city, city_distance,
-                    depth_dist, magnitude, mintensity))
-    body.append('</table><a href="/">Back to the list</a>')
+                    depth_dist, magnitude, intensity))
+    body.append('<a href="/">Back to the list</a>')
     return '\n'.join(body)
-
-    # if city is None:
-    #     raise NameError
-    # return page.format(**city)
-
-
-# def city(city):
-#     body = '<h1>{City}</h1>, <table>'
-#     item_template = ("""
-#     <tr><th><strong>Time/Date:</th><td>{timedate}</strong></td></tr>
-#     <tr><th>Distance from {city}:</th><td>{city_distance}</td></tr>
-#     <tr><th>Depth Distance from {city}:</th><td>{depth_dist}</td></tr>
-#     <tr><th>Magnitude:</th><td>{magnitude}</td></tr>
-#     <tr><th>Intensity:</th><td>{mintensity}</td></tr>
-#     """)
-#     all_cities = [key for key in eq_dict]
-#     mean_intensity = [eq_dict[city][0] for key in all_cities]
-#     for city in all_cities:
-#         for i in range(1, (len(eq_dict[city][1])+1)):
-#             mintensity = mean_intensity[all_cities.index(city)]
-#             timedate = [eq_dict[city][1][str(i)][0]]
-#             city_distance = [eq_dict[city][1][str(i)][1]]
-#             depth_dist = [eq_dict[city][1][str(i)][2]]
-#             magnitude = [eq_dict[city][1][str(i)][3]]
-#             body.append(item_template.format(city, timedate, city_distance,
-#                         depth_dist, magnitude, mintensity))
-#     body.append('<a href="/">Back to the list</a>')
-#     return '\n'.join(body)
-
-#     if city is None:
-#         raise NameError
-#     return page.format(**city)
-
-# def city(city):
-# #     page = """
-# # <h1>{city}</h1>
-# # <table>
-# #     <tr><th>Distance from {city}:</th><td>{city_dict[{city}][1]['1'][1]}</td></tr>
-# #     <tr><th>Depth Distance from {city}:</th><td>{city_dict[{city}][1]['1'][2]}</td></tr>
-# #     <tr><th>Magnitude:</th><td>{city_dict[{city}][1]['1'][3]}</td></tr>
-# #     <tr><th>Intensity:</th><td>{city_dict[{city}][1]['1'][4]}</td></tr>
-# # </table>
-# # <a href="/">Back to the list</a>
-# # """
-# #     city = temp_dict(city)
-# #     if city is None:
-# #         raise NameError
-# #     return page.format(**city)
-#     return '<h1>This is the city page for ' + city +'</h1>'
 
 
 def application(environ, start_response):
     headers = [("Content-type", "text/html")]
-    # import pdb; pdb.set_trace()
     try:
         path = environ.get('PATH_INFO', None)
         if path is None:
@@ -184,9 +133,3 @@ if __name__ == '__main__':
     from wsgiref.simple_server import make_server
     srv = make_server('localhost', 8000, application)
     srv.serve_forever()
-    # pprint(earthquake())
-    # if len(sys.argv) > 1 and sys.argv[1] == 'test':
-    #     html, encoding = read_search_results()
-    # else:
-    # pprint(cities())
-    # pprint(earthquake())

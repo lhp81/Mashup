@@ -122,10 +122,10 @@ def write_nginxconf():
     nginx_list.append('    listen 80;')
     nginx_list.append('    server_name ' + addr + ';')
     nginx_list.append('    access_log  /var/log/nginx/test.log;\n')
-    nginx_list.append('    location /static/ {')
-    nginx_list.append('    \troot /var/www/note-tagger/;')
-    nginx_list.append('    \tautoindex off;')
-    nginx_list.append('    }\n')
+    # nginx_list.append('    location /static/ {')
+    # nginx_list.append('    \troot /var/www/note-tagger/;')
+    # nginx_list.append('    \tautoindex off;')
+    # nginx_list.append('    }\n')
     nginx_list.append('    location / {')
     nginx_list.append('    \tproxy_pass http://127.0.0.1:8000;')
     nginx_list.append('    \tproxy_set_header Host $host;')
@@ -134,12 +134,12 @@ def write_nginxconf():
     nginx_list.append('    }')
     nginx_list.append('}')
     nginx_config = '\n'.join(nginx_list)
-    with open('note-tagger_package/server_config/simple_nginx_config', 'w') as outfile:
+    with open('simple_nginx_config', 'w') as outfile:
             outfile.write(nginx_config)
 
 
 def _sync_it():
-    rsync_project('/home/ubuntu/', 'equake_mashup.py')
+    rsync_project('/home/ubuntu/', 'equake_mashup.py simple_nginx_config')
     sudo('mv /etc/nginx/sites-available/default /etc/nginx/sites-available/default.orig')
     sudo('cp simple_nginx_config /etc/nginx/sites-available/default')
 
@@ -150,6 +150,7 @@ def sync_it():
 
 def _install_dep():
     sudo('apt-get -y install nginx')
+    sudo('pip install requests')
 
 
 def install_dep():
