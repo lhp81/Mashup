@@ -37,7 +37,7 @@ def application(environ, start_response):
 
 def cities():
     all_cities = [key for key in earthquake()]
-    all_means = earthquake()['city'][0] for city in all_cities
+    mean_intensity = [earthquake()['city'][0] for city in all_cities]
     body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
     item_template = ('<li><strong><a href="/cities/{city}">{city}</a></strong>'
                      '(Mean Intensity: {mean_intensity})</li>')
