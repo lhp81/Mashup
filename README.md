@@ -1,7 +1,7 @@
 Mashup
 ======
 
-By [jwhite007](https://github.com/jwhite007/) and [lukewrites](https://github.com/lhp1981/) for [Cris Ewing](https://github.com/cewing/) at [CodeFellows](http://codefellows.org/)
+By [jwhite007](https://github.com/jwhite007/) and [lhp81](https://github.com/lhp1981/) for [Cris Ewing](https://github.com/cewing/) at [CodeFellows](http://codefellows.org/)
 
 This script uses the API from [Seismi](http://www.seismi.org/), mashed up with geocoding data from Google Maps.
 
