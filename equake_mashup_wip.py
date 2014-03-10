@@ -87,13 +87,14 @@ def cities():
 
 
 def city(city):
-    body = ['<h1>City Data:</h1>', '<table>']
+    body = ['<h1>City Data:</h1>']
     # body.format(city)
-    item_template = ('<tr><th>Event time:</th><td>{0} km</td></tr>'
+    item_template = ('<table>'
+                    '<tr><th>Event time:</th><td>{0} km</td></tr>'
                     '<tr><th>Epicenter distance from {1}:</th><td>{2} km</td></tr>'
                     '<tr><th>Depth Distance from {1}:</th><td>{3} km</td></tr>'
                     '<tr><th>Magnitude:</th><td>{4}</td></tr>'
-                     )
+                    '</table>' )
 
     for key in eq_dict[city][1]:
         timedate = eq_dict[city][1][key][0]
@@ -103,7 +104,7 @@ def city(city):
         # mag_intensity = eq_dict[city][1][key][4]
         body.append(item_template.format(timedate, city, city_distance,
                     depth_dist, magnitude))
-    body.append('</table><a href="/">Back to the list</a>')
+    body.append('<a href="/">Back to the list</a>')
     return '\n'.join(body)
 
     # if city is None:
