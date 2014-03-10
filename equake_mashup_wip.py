@@ -76,13 +76,10 @@ eq_dict = earthquake()
 def cities():
     all_cities = [key for key in eq_dict]
     mean_intensity = [eq_dict[city][0] for city in all_cities]
-    body = ['<h1>West Coast City Earthquake Data</h1>', '<ul>']
+    body = ['<h1>West Coast City Earthquake Data for 2013</h1>', '<ul>']
     item_template = ('<li><strong><a href="/cities/{0}">{0}</a></strong>'
-                     '(Mean Intensity: {1})</li>')
+                     ' (Mean Intensity: {1})</li>')
     for city in all_cities:
-        # city_as_list = city.split()
-        # cwos = ''.join(city_as_list)
-
         mintensity = mean_intensity[all_cities.index(city)]
         body.append(item_template.format(city, mintensity))
     body.append('</ul>')
@@ -90,24 +87,21 @@ def cities():
 
 
 def city(city):
-    body = '<h1>{city}</h1>'
+    body = ['<h1>{city}</h1>', '<table>']
     body.format(city)
     item_template = ("""
-    <h2>{timedate}</h2>
-    <table>
-    # <tr><th><strong>Time/Date:</th><td>{timedate}</strong></td></tr>
+    <tr><th><strong>Time/Date:</th><td>{timedate}</strong></td></tr>
     <tr><th>Epicenter distance from {city}:</th><td>{city_distance} km</td></tr>
     <tr><th>Depth Distance from {city}:</th><td>{depth_dist} km</td></tr>
     <tr><th>Magnitude:</th><td>{magnitude}</td></tr>
     <tr><th>Intensity:</th><td>{mintensity}</td></tr>
     """)
-    
-    for i in range(1, (len(eq_dict[city][1])+1)):
-        timedate = eq_dict[city][1][str(i)][0]
-        city_distance = eq_dict[city][1][str(i)][1]
-        depth_dist = eq_dict[city][1][str(i)][2]
-        magnitude = eq_dict[city][1][str(i)][3]
-        mintensity = eq_dict[city][0][str(i)][4]
+    for key in eq_dict[city][1]:
+        timedate = eq_dict[city][1][key][0]
+        city_distance = eq_dict[city][1][key][1]
+        depth_dist = eq_dict[city][1][key][2]
+        magnitude = eq_dict[city][1][key][3]
+        mintensity = eq_dict[city][0][key][4]
         body.append(item_template.format(timedate, city, city_distance,
                     city, depth_dist, magnitude, mintensity))
     body.append('</table><a href="/">Back to the list</a>')
@@ -116,6 +110,24 @@ def city(city):
     if city is None:
         raise NameError
     # return page.format(**city)
+
+# def city(city):
+# #     page = """
+# # <h1>{city}</h1>
+# # <table>
+# #     <tr><th>Distance from {city}:</th><td>{city_dict[{city}][1]['1'][1]}</td></tr>
+# #     <tr><th>Depth Distance from {city}:</th><td>{city_dict[{city}][1]['1'][2]}</td></tr>
+# #     <tr><th>Magnitude:</th><td>{city_dict[{city}][1]['1'][3]}</td></tr>
+# #     <tr><th>Intensity:</th><td>{city_dict[{city}][1]['1'][4]}</td></tr>
+# # </table>
+# # <a href="/">Back to the list</a>
+# # """
+# #     city = temp_dict(city)
+# #     if city is None:
+# #         raise NameError
+# #     return page.format(**city)
+#     return '<h1>This is the city page for ' + city +'</h1>'
+
 
 def application(environ, start_response):
     headers = [("Content-type", "text/html")]
