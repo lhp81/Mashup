@@ -71,8 +71,6 @@ def get_city_loc(city):
     return (lat, lng)
 
 eq_dict = earthquake()
-city_dict = [dict(id=city, title=database[id]['title']) for id in
-                  eq_dict]
 
 
 def cities():
@@ -110,8 +108,7 @@ def city(city):
             depth_dist = [eq_dict[city][1][str(i)][2]]
             magnitude = [eq_dict[city][1][str(i)][3]]
             body.append(item_template.format(city, timedate, city_distance,
-                    depth_dist, magnitude, mintensity))
-    number_of_events = [len(temp_dict.keys()[city]) for city in all_cities]
+                        depth_dist, magnitude, mintensity))
     body.append('<a href="/">Back to the list</a>')
     return '\n'.join(body)
 
