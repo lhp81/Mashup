@@ -90,21 +90,24 @@ def cities():
 
 
 def city(city):
-    body = '<h1>{city}</h1>, <table>'
+    body = '<h1>City</h1>'
+    # body.append(body.format(city))
     item_template = ("""
-    <tr><th><strong>Time/Date:</th><td>{timedate}</strong></td></tr>
-    <tr><th>Distance from {city}:</th><td>{city_distance}</td></tr>
-    <tr><th>Depth Distance from {city}:</th><td>{depth_dist}</td></tr>
+    <h2>{timedate}</h2>
+    <table>
+    # <tr><th><strong>Time/Date:</th><td>{timedate}</strong></td></tr>
+    <tr><th>Epicenter distance from {city}:</th><td>{city_distance} km</td></tr>
+    <tr><th>Depth Distance from {city}:</th><td>{depth_dist} km</td></tr>
     <tr><th>Magnitude:</th><td>{magnitude}</td></tr>
     <tr><th>Intensity:</th><td>{mintensity}</td></tr>
     """)
+    mintensity = eq_dict[city][0]
     for i in range(1, (len(eq_dict[city][1])+1)):
-        mintensity = eq_dict[city][0]
         timedate = eq_dict[city][1][str(i)][0]
         city_distance = eq_dict[city][1][str(i)][1]
         depth_dist = eq_dict[city][1][str(i)][2]
         magnitude = eq_dict[city][1][str(i)][3]
-        body.append(item_template.format(city, timedate, city, city_distance,
+        body.append(item_template.format(timedate, city, city_distance,
                     city, depth_dist, magnitude, mintensity))
     body.append('</table><a href="/">Back to the list</a>')
     return '\n'.join(body)
